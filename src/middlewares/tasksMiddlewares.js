@@ -2,14 +2,13 @@ const tasksValidation = require('../validations/tasks');
 
 function newTaskMiddleware(req, res, next){
 	const { name } = req.body;
-	
-
 	if(!name) return res.status(422).send({error: 'envie um nome para sua task'});
 
 	const validation = tasksValidation.validateTaskName(name);
-	if(validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
+
+	if(!validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
 	
-	req.color = name;
+	req.name = name;
 	next();
 }
 
@@ -19,7 +18,7 @@ function updateTaskMiddleware(req, res, next){
 
 
 	const validation = tasksValidation.validateUpdateTask(id, name, isChecked);
-	if(validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
+	if(!validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
 
 	// const exists = function(id);
 	const exists = true;
@@ -30,10 +29,10 @@ function updateTaskMiddleware(req, res, next){
 }
 
 function deleteTaskMiddleware(req, res, next){
-	const { id } = req.params.id;
+	const id = req.params;
 
 	const validation = tasksValidation.validateDeleteTask(id);
-	if(validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
+	if(!validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
 
 	// const exists = function(id);
 	const exists = true;

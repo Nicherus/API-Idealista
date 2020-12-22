@@ -39,7 +39,6 @@ const validateDeleteTask = (id) => {
 		id,
 	};
 	const validation = task.validate(data);
-	
 	return !!validation.error;
 };
 

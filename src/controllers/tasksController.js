@@ -1,12 +1,24 @@
+const Task = require('../models/tasksModel');
+const BaseModel = require('../models/baseModel');
+const db = require('../database');
 
 const newTask = async (req, res) => { 
 	const name = req.name;
 
-	// const task = function(name);
-	const task = name;
 
-	if(task)return res.status(201).send(task);
-		
+	const task = new Task(name);
+
+	const taskData = await task.createTask();
+	
+	const taskUser = {
+		id: taskData.id,
+		name: taskData.name,
+		isChecked: taskData.is_checked,
+		labels: [],
+	};
+
+	if(taskUser)return res.status(201).send(taskUser);
+
 	return res.status(500).send({error: 'erro no servidor, por favor informe um desenvolvedor'});
 };
 
@@ -35,8 +47,9 @@ const updateTask = async (req, res) => {
 const deleteTask = async (req, res) => { 
 	const id = req.id;
 
-	// const deleted = function(id);
-	const deleted = id;
+	console.log(id);
+	const baseModel = new BaseModel(id);
+	const deleted = baseModel.deleteFrom('tasks');
 
 	if(deleted) return res.status(200).send('Ok!');
 		

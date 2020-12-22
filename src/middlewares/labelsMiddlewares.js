@@ -6,7 +6,7 @@ function newLabelMiddleware(req, res, next){
 	if(!color) return res.status(422).send({error: 'envie uma cor'});
 	
 	const validation = labelsValidation.validateColor(color);
-	if(validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
+	if(!validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
 
 	req.color = color;
 	next();
@@ -20,7 +20,7 @@ function moveLabelToTaskMiddleware(req, res, next){
 	if(!labelId) return res.status(422).send({error: 'envie um id de label'});
 	
 	const validation = labelsValidation.validateMoveLabel(taskId, labelId);
-	if(validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
+	if(!validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
 
 	// const exists = function(taskId, labelId);
 	const exists = true;

@@ -1,11 +1,15 @@
+const Label = require('../models/labelsModel');
+const BaseModel = require('../models/baseModel');
 
 const newLabel = async (req, res) => { 
 	const color = req.color;
 	
-	// const label = funcao(color);
-	const label = color;
 
-	if(label) return res.status(201).send(label);	
+
+	const label = new Label(color);
+	const labelData = await label.createLabel();
+
+	if(labelData) return res.status(201).send(labelData);	
 
 	return res.status(500).send({error: 'erro no servidor, por favor informe um desenvolvedor'});
 };
@@ -13,9 +17,9 @@ const newLabel = async (req, res) => {
 
 const getLabels = async (req, res) => { 
 
-	// const labels = function()
-	const labels = 1;
-
+	const baseModel = new BaseModel();
+	const labels = await baseModel.findAll('labels');
+	
 	if(labels) return res.status(201).send(labels);
 
 	return res.status(500).send({error: 'erro no servidor, por favor informe um desenvolvedor'});
