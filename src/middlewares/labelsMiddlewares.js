@@ -1,3 +1,5 @@
+const Label = require('../models/labelsModel');
+const Task = require('../models/tasksModel');
 const labelsValidation = require('../validations/labels');
 
 function newLabelMiddleware(req, res, next){
@@ -12,7 +14,7 @@ function newLabelMiddleware(req, res, next){
 	next();
 }
 
-function moveLabelToTaskMiddleware(req, res, next){
+async function moveLabelToTaskMiddleware(req, res, next){
 	const taskId = req.params.taskId;
 	const labelId = req.params.labelId;
 
@@ -22,9 +24,10 @@ function moveLabelToTaskMiddleware(req, res, next){
 	const validation = labelsValidation.validateMoveLabel(taskId, labelId);
 	if(!validation) return res.status(422).send({error: 'cheque os dados que esta enviando'});
 
-	// const exists = function(taskId, labelId);
-	const exists = true;
-	if(!exists) return res.status(404).send({error: 'essa task ou label não existe'});
+	const label = await Label.findLabel(labelId);
+	const task = await Task.findTask(taskId);
+	
+	if(!label || !task) return res.status(404).send({error: 'essa tarefa ou label não existe'});
 
 	req.taskId = taskId;
 	req.labelId = labelId;

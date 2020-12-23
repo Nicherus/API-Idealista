@@ -19,7 +19,7 @@ app.post('/tasks', tasksMiddlewares.newTaskMiddleware, tasksController.newTask);
 app.post('/tasks/:taskId/labels/:labelId', labelsMiddlewares.moveLabelToTaskMiddleware, labelsController.moveLabelToTask);
 app.get('/tasks', tasksController.getTasks);
 app.put('/tasks/:id', tasksMiddlewares.updateTaskMiddleware, tasksController.updateTask);
-app.delete('/tasks/', tasksMiddlewares.deleteTaskMiddleware,tasksController.deleteTask);
+app.delete('/tasks/:id/', tasksMiddlewares.deleteTaskMiddleware,tasksController.deleteTask);
 
 //labels
 app.post('/labels', labelsMiddlewares.newLabelMiddleware, labelsController.newLabel);

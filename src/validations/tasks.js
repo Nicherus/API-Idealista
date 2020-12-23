@@ -14,9 +14,9 @@ const validateTaskName = (name) => {
 const validateUpdateTask = (id, name, isChecked) => {
 
 	const task = joi.object({
-		id: joi.number().required,
-		name: joi.string().required,
-		isChecked: joi.boolean().required,
+		id: joi.number().required(),
+		name: joi.string(),
+		isChecked: joi.boolean(),
 	});
 
 	const data = {
@@ -32,12 +32,13 @@ const validateUpdateTask = (id, name, isChecked) => {
 const validateDeleteTask = (id) => {
 
 	const task = joi.object({
-		id: joi.number().required,
+		id: joi.number().required(),
 	});
 
 	const data = {
 		id,
 	};
+
 	const validation = task.validate(data);
 	return !!validation.error;
 };
