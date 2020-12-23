@@ -26,11 +26,11 @@ const newTask = async (req, res) => {
 const getTasks = async (req, res) => { 
 
 	const tasks = await Task.findAll('tasks');
+
 	const taskList = await Promise.all(tasks.map(async t =>{
 		t.labels = await Label.findById(t.id);
 		return t;
-	}))
-	
+	}));
 
 	if(tasks) return res.status(201).send(taskList);
 
@@ -41,10 +41,20 @@ const updateTask = async (req, res) => {
 	const id = req.id;
 	const { name, isChecked } = req.body;
 	
-	// const task = function(id, name, isChecked);
-	const task = id;
+	const task = new Task();
+	let updateTask;
 
-	if(task)return res.status(201).send(task);
+	if(name && JSON.stringify(isChecked)){
+		updateTask = await task.updateTaskNameCheck(id, name, isChecked);
+	} else if(name){
+		updateTask = await task.updateTaskName(id, name);
+	} else if(JSON.stringify(isChecked)){
+		updateTask = await task.updateTaskCheck(id, isChecked);
+	} else{
+		return res.status(422).send({error: 'envie pelo menos um dado para editar a task'});
+	}
+
+	if(updateTask)return res.status(201).send(updateTask);
 		
 	return res.status(500).send({error: 'erro no servidor, por favor informe um desenvolvedor'});
 };
@@ -54,7 +64,7 @@ const deleteTask = async (req, res) => {
 
 	console.log(id);
 	const baseModel = new BaseModel(id);
-	const deleted = baseModel.deleteFrom('tasks');
+	const deleted = await baseModel.deleteFrom('tasks');
 
 	if(deleted) return res.status(200).send('Ok!');
 		
