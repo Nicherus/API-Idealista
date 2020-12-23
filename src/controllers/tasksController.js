@@ -1,4 +1,5 @@
 const Task = require('../models/tasksModel');
+const Label = require('../models/labelsModel');
 const BaseModel = require('../models/baseModel');
 const db = require('../database');
 
@@ -24,10 +25,14 @@ const newTask = async (req, res) => {
 
 const getTasks = async (req, res) => { 
 
-	// const task = function();
-	const task = 1;
+	const tasks = await Task.findAll('tasks');
+	const taskList = await Promise.all(tasks.map(async t =>{
+		t.labels = await Label.findById(t.id);
+		return t;
+	}))
+	
 
-	if(task) return res.status(201).send(task);
+	if(tasks) return res.status(201).send(taskList);
 
 	return res.status(500).send({error: 'erro no servidor, por favor informe um desenvolvedor'});
 };

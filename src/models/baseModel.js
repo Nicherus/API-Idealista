@@ -10,9 +10,10 @@ module.exports = class BaseModel {
 		return db.query(`DELETE FROM ${tableName} WHERE id = $1`, [this.id]);
 	}
 
-	async findAll(tableName) {
-		const query = await db.query(`SELECT * FROM ${tableName}`);
-		return query.rows;
+	static async findAll(tableName) {
+		const results = await db.query(`SELECT * FROM ${tableName}`);	
+		const tasks = results.rows.map(t => new BaseModel(t.id, t.name));
+		return tasks;
 	}
 
 	static async selectFrom(tableName) {
